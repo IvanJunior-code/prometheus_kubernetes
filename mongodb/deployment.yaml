@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/path: /metrics
+          prometheus.io/port: "9216"
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:4.2.8
+          ports:
+            - containerPort: 27017
+          resources: {}
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: mongouser
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: mongopwd
+        - name: mongodbexporter
+          image: fabricioveronez/mongo_exporter
+          resources: {}
+          ports:
+            - containerPort: 9216
+          env:
+            - name: MONGODB_URI
+              value: mongodb://mongouser:mongopwd@localhost:27017 #busca localhost pois esses dois containers estão no mesmo pod, então compartilham o mesmo host
