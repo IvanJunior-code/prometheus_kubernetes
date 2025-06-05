@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "80"
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: kubedevio/pedelogo-catalogo:v1.0.0
+          ports:
+          - containerPort: 80
+          imagePullPolicy: Always
+          resources: {}
+          env:
+            - name: Mongo__User
+              value: mongouser
+            - name: Mongo__Password
+              value: mongopwd
+            - name: Mongo__Host
+              value: mongo-service
+            - name: Mongo__DataBase
+              value: admin
