@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.16"
+      version = "6.0.0"
     }
   }
 
@@ -355,6 +355,7 @@ resource "aws_eks_node_group" "nodes_general" {
   cluster_name    = aws_eks_cluster.eks.name
   node_group_name = "nodes-general"
   node_role_arn   = aws_iam_role.nodes_general.arn
+  version = 1.32
 
   subnet_ids = [
     aws_subnet.private_1.id,
