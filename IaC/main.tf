@@ -30,9 +30,9 @@ resource "aws_vpc" "main" {
   }
 }
 
-output "vpc_id" {
-  value       = aws_vpc.main.id
-  description = "VPC id."
+output "eks_update_kubeconfig_string" {
+  value       = "aws eks update-kubeconfig --name ${aws_eks_cluster.eks.name}"
+  description = "AWS CLI command to connect to EKS."
 
   sensitive = false
 }
